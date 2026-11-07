@@ -51,5 +51,47 @@ if (copyButton && copyStatus) {
   });
 }
 
+// Highlight the nav link of the section currently on screen
+const navLinks = [...document.querySelectorAll('.main-nav a[href^="#"]:not(.nav-contact)')];
+if ('IntersectionObserver' in window && navLinks.length) {
+  const spy = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      const link = navLinks.find(a => a.getAttribute('href') === '#' + entry.target.id);
+      if (!link) return;
+      link.classList.toggle('is-active', entry.isIntersecting);
+      if (entry.isIntersecting) link.setAttribute('aria-current', 'true');
+      else link.removeAttribute('aria-current');
+    });
+  }, { rootMargin: '-45% 0px -50% 0px' });
+  navLinks.forEach(a => {
+    const section = document.querySelector(a.getAttribute('href'));
+    if (section) spy.observe(section);
+  });
+}
+
+// Gentle fade-in for blocks below the first screen.
+// (The hero animates with CSS only, so nothing flashes on load.)
+const revealTargets = document.querySelectorAll(
+  '.section-heading, .service-card, .project-card, .about-title-col, .about-copy, .contact-intro, .contact-card, .faq-grid > div:first-child, .faq-list details, .booking-intro, .booking-calendar-card'
+);
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+if ('IntersectionObserver' in window && !reduceMotion) {
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      el.classList.remove('reveal');
+      el.classList.add('revealed');
+      io.unobserve(el);
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  revealTargets.forEach(el => {
+    const position = Array.prototype.indexOf.call(el.parentElement.children, el);
+    el.style.setProperty('--d', Math.min(position, 3) * 0.08 + 's');
+    el.classList.add('reveal');
+    io.observe(el);
+  });
+}
+
 const year = document.querySelector('#year');
 if (year) year.textContent = new Date().getFullYear();
