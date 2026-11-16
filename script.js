@@ -247,23 +247,6 @@ if ('IntersectionObserver' in window && !reduceMotion) {
   });
 }
 
-// The big number in the hero counts up once, after the page has settled.
-const statNumber = document.querySelector('.hero-stat strong');
-if (statNumber && !reduceMotion && statNumber.firstChild && statNumber.firstChild.nodeType === 3) {
-  const textNode = statNumber.firstChild;
-  const end = parseInt(textNode.textContent, 10);
-  if (end > 0) {
-    textNode.textContent = '0';
-    const t0 = performance.now() + 900;
-    const count = now => {
-      const p = Math.min(Math.max((now - t0) / 1300, 0), 1);
-      textNode.textContent = String(Math.round(end * (1 - Math.pow(1 - p, 3))));
-      if (p < 1) requestAnimationFrame(count);
-    };
-    requestAnimationFrame(count);
-  }
-}
-
 // The marquee in the hero speeds up while you scroll and settles back when you stop.
 const marqueeTrack = document.querySelector('.marquee-track');
 const marqueeAnim = marqueeTrack && marqueeTrack.getAnimations ? marqueeTrack.getAnimations()[0] : null;
