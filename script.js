@@ -77,7 +77,7 @@ const copyStatus = document.querySelector('#copy-status');
 let statusTimer;
 if (copyButton && copyStatus) {
   copyButton.addEventListener('click', async () => {
-    const email = 'sarahanwarismael@gmail.com';
+    const email = 'contact@sarahi.dev';
     try {
       if (navigator.clipboard?.writeText) {
         await navigator.clipboard.writeText(email);
