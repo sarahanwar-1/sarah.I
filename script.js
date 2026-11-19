@@ -270,5 +270,19 @@ if (marqueeAnim && !reduceMotion) {
   }, { passive: true });
 }
 
+// On small screens the floating bar frosts over once the page scrolls (see .site-header.is-scrolled in style.css).
+const siteHeader = document.querySelector('.site-header');
+if (siteHeader) {
+  let barTicking = false;
+  const updateBar = () => {
+    siteHeader.classList.toggle('is-scrolled', window.scrollY > 24);
+    barTicking = false;
+  };
+  window.addEventListener('scroll', () => {
+    if (!barTicking) { barTicking = true; requestAnimationFrame(updateBar); }
+  }, { passive: true });
+  updateBar();
+}
+
 const year = document.querySelector('#year');
 if (year) year.textContent = new Date().getFullYear();

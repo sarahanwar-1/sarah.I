@@ -664,6 +664,13 @@ h3 { font-size: 22px; letter-spacing: -.02em; }
   .header-inner { gap: 10px; }
   .main-nav { margin-left: 0; }
   .theme-toggle { width: 46px; height: 46px; margin-left: auto; }
+  /* once the page scrolls, the bar frosts over so section headings never run into the logo */
+  .site-header { transition: background-color .25s ease, border-color .25s ease, box-shadow .25s ease; }
+  .site-header.is-scrolled {
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    -webkit-backdrop-filter: blur(14px) saturate(1.2); backdrop-filter: blur(14px) saturate(1.2);
+    border-color: var(--line-strong); box-shadow: 0 12px 28px -20px rgba(7, 10, 26, .55);
+  }
 
   .menu-toggle {
     position: relative; z-index: 52; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px;
@@ -707,16 +714,40 @@ h3 { font-size: 22px; letter-spacing: -.02em; }
 @media (max-width: 699px) {
   body { font-size: 16px; }
   .hero::before, .section::before { display: none; }
-  .service-card { grid-template-columns: 56px minmax(0, 1fr); grid-template-areas: "n t" ". p" ". tags"; column-gap: 14px; }
-  .service-card p { font-size: 15px; }
-  .service-card::before { inset: 0 -12px; }
+  /* Services: a two-column grid of cards (display: grid; 1fr 1fr) */
+  .services-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; border-bottom: 0; }
+  .service-card {
+    display: flex; flex-direction: column; align-items: flex-start; gap: 8px;
+    padding: 16px 14px 14px; background: var(--surface); border: 1px solid var(--line-strong);
+    border-radius: var(--radius); box-shadow: var(--card-shadow);
+  }
+  .service-card::before, .service-card::after { display: none; }
+  .service-number { font-size: 40px; }
+  .service-card h3 { font-size: 17px; line-height: 1.2; }
+  .service-card p { font-size: 13.5px; line-height: 1.6; }
+  .tag-list { margin-top: auto; padding-top: 6px; gap: 6px; justify-content: flex-start; }
+  .tag-list span { padding: 3px 9px; font-size: 11.5px; }
+  /* side-by-side cards rise into view instead of sliding in from the left */
+  @keyframes service-rise { from { opacity: 0; translate: 0 32px; } to { opacity: 1; translate: 0 0; } }
+  .services-grid .service-card { animation-name: service-rise; animation-range: entry 0% entry 70%; }
+  .service-number { animation: none; }
   .skill-chips { grid-template-columns: 1fr 1fr; gap: 0 20px; }
   .faq-list details p { margin: -6px 0 24px 48px; }
 }
 
 @media (max-width: 599px) {
-  .projects-grid { grid-template-columns: 1fr; max-width: 440px; }
-  .project-media { aspect-ratio: 16 / 10; }
+  /* Projects: two columns (display: grid; 1fr 1fr), cards in a row share one height */
+  .projects-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; max-width: none; align-items: stretch; }
+  .project-media { aspect-ratio: 4 / 3; }
+  .project-media::before { left: 8px; top: 8px; padding: 4px 9px 3px; font-size: 14px; }
+  .image-arrow { right: 8px; bottom: 8px; width: 34px; height: 34px; font-size: 15px; }
+  .project-info { padding-top: 12px; }
+  .project-eyebrow { gap: 6px; margin-bottom: 6px; font-size: 9.5px; letter-spacing: .1em; }
+  .project-info h3 { font-size: 16px; }
+  .project-info > p { margin-bottom: 12px; font-size: 13px; line-height: 1.55; }
+  .project-bottom { flex-direction: column; align-items: flex-start; gap: 6px; padding-top: 10px; }
+  .project-bottom > span { font-size: 11px; }
+  .project-bottom a { font-size: 12.5px; }
 }
 
 @media (max-width: 860px) {
@@ -743,6 +774,13 @@ h3 { font-size: 22px; letter-spacing: -.02em; }
   .brand { font-size: 25px; }
   .hero h1 { font-size: 38px; }
   .button { padding-left: 20px; font-size: 14.5px; }
+  .services-grid, .projects-grid { gap: 10px; }
+  .service-card { padding: 14px 11px 12px; }
+  .service-number { font-size: 34px; }
+  .service-card h3 { font-size: 15.5px; }
+  .service-card p, .project-info > p { font-size: 12.5px; }
+  .tag-list span { padding: 3px 8px; font-size: 11px; overflow-wrap: anywhere; }
+  .project-info h3 { font-size: 15px; }
 }
 
 /* Short laptop screens: keep the hero inside one screen */
